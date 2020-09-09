@@ -16,6 +16,8 @@
     1 => "pics/haug2.jpg"
   );
 
+  $haugiPilt = 0;
+
   if ($hourNow < 7) {
     $partofday = "uneaeg";
   }
@@ -24,20 +26,40 @@
     $partofday = "akadeemilise aktiivsuse aeg";
   }
 
-  $haugiPilt = 0
-
   //vaatame semestri kulgemist
-  $semesterStart = new DateTime("2020-9-31");
+  $semesterStart = new DateTime("2020-08-31");
   $semesterEnd = new DateTime("2020-12-13");
+  $today = new DateTime("now");
 
-  //selgitage välja nende vahe ehk erinevus
+  $semesterStartToToday = $semesterStart->diff($today);
+  $toSemesterEnd = $today->diff($semesterEnd);
   $semesterDuration = $semesterStart->diff($semesterEnd);
 
-  //leiame selle p2evade arvu
+  // Alati formati vahe 2ra, muidu ei teki numbri tyypi, millega v6rrelda
+  $semesterStartDays = $semesterStartToToday->format("%r%a");
   $semesterDurationDays = $semesterDuration->format("%r%a");
+  $daysToSemesterEnd = $toSemesterEnd->format("%r%a");
 
-  //T2nane p2ev
-  $today = new DateTime("now");
+
+  $semestriMessage = 0;
+
+  if ($semesterStartDays < 0) {
+      $semestriMessage =  "Semester pole veel alanud";
+  } else if ($semesterStartDays <= $semesterDurationDays) {
+      $percentToEnd = ($semesterStartDays * 100) / $semesterDurationDays;
+      $semestriMessage = "Semestri l6puni on: " . $daysToSemesterEnd . " p2eva " . " 6ppet88st on tehtud: " . round($percentToEnd, 1) . "%";
+  } else {
+      $semestriMessage =  "Semester on l6ppenud";
+  }
+  
+
+  // selgitage välja nende vahe ehk erinevus
+  // $semesterDuration = $semesterStart->diff($semesterEnd);
+
+  // leiame selle p2evade arvu
+  // $semesterDurationDays = $semesterDuration->format("%r%a");
+
+  
   // if ($fromsemesterstartdays < 0) { semester ple alanud }
   // if ($semesterstartdays >= $semesterDurationDays)
   // mitu % õppetööst on tehtud
@@ -59,6 +81,7 @@
       <h1 id="mainHeader"><?php echo $webNameArray[rand(0, 2)] ?> Kalawiki</h1>
       <h3 id="mainHeader">See leht on veebiprogemise kursuse alusel tehtud, midagi t2htsat siin ei ole</h3>
       <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $fullTimeNow?></h3>
+      <h4 id="mainHeader"><?php echo $semestriMessage?></h3>
     </header>
     <nav id="navBar">
       <a href="home.php">Haug</a>
