@@ -25,6 +25,23 @@
   }
 
   $haugiPilt = 0
+
+  //vaatame semestri kulgemist
+  $semesterStart = new DateTime("2020-9-31");
+  $semesterEnd = new DateTime("2020-12-13");
+
+  //selgitage välja nende vahe ehk erinevus
+  $semesterDuration = $semesterStart->diff($semesterEnd);
+
+  //leiame selle p2evade arvu
+  $semesterDurationDays = $semesterDuration->format("%r%a");
+
+  //T2nane p2ev
+  $today = new DateTime("now");
+  // if ($fromsemesterstartdays < 0) { semester ple alanud }
+  // if ($semesterstartdays >= $semesterDurationDays)
+  // mitu % õppetööst on tehtud
+
 ?>
 
 
