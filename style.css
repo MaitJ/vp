@@ -35,3 +35,7 @@ html {
 footer {
     border-top: solid 1px;
 }
+
+header img {
+    width: auto;
+}

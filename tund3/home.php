@@ -1,22 +1,32 @@
 <?php 
   $username = "Mait Jurask";
-
-  $webNameArray = array(
-    0 => "Gheto",
-    1 => "Trash",
-    2 => "Mediocre"
-  );
-
   $fullTimeNow = date("H:i:s");
   $hourNow = date("H");
   $partofday = "lihtsalt aeg";
 
+  $weekdayNamesET = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"];
+  $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
+
+  $weekdaynow = date("N");
+  $monthnow = date("n");
+
+  //loeme kataloogist piltide nimekirja
+  $allfiles = scandir("vp_pics/");
+  //var_dump($allfiles);
+  $picfiles = array_slice($allfiles, 2);
+  $imghtml = "";
+  $piccount = count($picfiles);
+
+  for ($i = 0; $i < $piccount; $i++) {
+    $imghtml .= '<img src="vp_pics/' . $picfiles[$i] . '" alt="Tallinna Ylikool">';
+  }
+  
+
   $haugiPildiArray = array(
-    0 => "pics/haug.jpeg",
-    1 => "pics/haug2.jpg"
+    0 => "/pics/haug.jpeg",
+    1 => "/pics/haug2.jpg"
   );
 
-  $haugiPilt = rand(0, 1);
 
   if ($hourNow < 7) {
     $partofday = "uneaeg";
@@ -64,28 +74,21 @@
   // if ($semesterstartdays >= $semesterDurationDays)
   // mitu % õppetööst on tehtud
 
+  require("header.php");
 ?>
 
-
-<!DOCTYPE html>
-<html lang="et">
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <title><?php echo $username;?> veebileht</title>
-
-</head>
-<body>
   <div id="contentLocker">
     <header>
-      <h1 id="mainHeader"><?php echo $webNameArray[rand(0, 2)] ?> Kalawiki</h1>
+      <h1 id="mainHeader">Gheto Kalawiki</h1>
       <h3 id="mainHeader">See leht on veebiprogemise kursuse alusel tehtud, midagi t2htsat siin ei ole</h3>
-      <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $fullTimeNow?></h3>
+      <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $weekdayNamesET[$weekdaynow - 1]. " " . date("j") . ". " . $monthNamesET[$monthnow - 1] . " " . $fullTimeNow?></h3>
       <h4 id="mainHeader"><?php echo $semestriMessage?></h3>
+      <img src="img/vp_banner.png" alt="Veebiprogrammeerimise logo">
+      <p><?php echo var_dump($_POST);?></p>
     </header>
     <nav id="navBar">
-      <a href="home.php">Haug</a>
-      <a href="forell.html">Forell</a>
+      <a href="/tund3/home.php">Haug</a>
+      <a href="/forell.html">Forell</a>
     </nav>
     <div id="content">
       <h2>Haugi poiss</h2>
@@ -108,6 +111,13 @@
         
         Harrastuspüügil kasutatakse enamasti spinningut ja elussöödaõnge, vähemal määral lendõnge ja põhjaõnge. Enamikus veekogudes on edukaim püügiviis elussöödaõng, mõnes spinning.</p>
     </div>
+    <form method="POST">
+      <label>Kirjutage siia oma esimene m6te!</label>
+      <input type="text" name="ideainput" placeholder="m6ttekoht">
+      <input type="submit" name="ideasubmit" value="Saada m6te teele!">
+    </form>
+    <hr>
+    <?php echo $imghtml;?>
     <footer>
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>
       <h4><?php echo "Parajasti on " .$partofday ."." ?></h4>
