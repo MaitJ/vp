@@ -4,6 +4,38 @@
   $hourNow = date("H");
   $partofday = "lihtsalt aeg";
 
+  $database = "if20_mait_ju_1";
+ 
+  require("../../../config.php");
+  if (isset($_POST["ideasubmit"]) and !empty($_POST["ideainput"])) {
+	//Loome andmebaasiga yhenduse
+	$conn = new mysqli($serverhost, $serverusername, $serverpassword, $database);	
+	//Valmistan ette sql k2su andmete kirjutamiseks
+	$stmt = $conn->prepare("INSERT INTO myideas (idea) VALUES (?)");
+	echo $conn->error;
+
+	//i - integer, d -decimal, s -string
+	$stmt->bind_param("s", $_POST["ideainput"]);
+	$stmt->execute();
+	$stmt->close();
+	$conn->close();
+  }
+ 
+  //Loen andmebaasist senised m6tted
+
+  $ideahtml = "";
+  $conn = new mysqli($serverhost, $serverusername, $serverpassword, $database);	
+  $stmt = $conn->prepare("SELECT idea FROM myideas");
+  //Seon tulemuse muutujaga
+  $stmt->bind_result($ideafromdb);
+  $stmt->execute();
+  while ($stmt->fetch()) {
+	$ideahtml .= "<p>" . $ideafromdb . "</p>";
+  }
+  $stmt->close();
+  $conn->close();
+
+
   $weekdayNamesET = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"];
   $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
 
@@ -23,8 +55,8 @@
   
 
   $haugiPildiArray = array(
-    0 => "/pics/haug.jpeg",
-    1 => "/pics/haug2.jpg"
+    0 => "../pics/haug.jpeg",
+    1 => "../pics/haug2.jpg"
   );
 
 
@@ -75,7 +107,7 @@
   // mitu % õppetööst on tehtud
 
   require("header.php");
-?>
+  ?> 
 
   <div id="contentLocker">
     <header>
@@ -84,7 +116,6 @@
       <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $weekdayNamesET[$weekdaynow - 1]. " " . date("j") . ". " . $monthNamesET[$monthnow - 1] . " " . $fullTimeNow?></h3>
       <h4 id="mainHeader"><?php echo $semestriMessage?></h3>
       <img src="img/vp_banner.png" alt="Veebiprogrammeerimise logo">
-      <p><?php echo var_dump($_POST);?></p>
     </header>
     <nav id="navBar">
       <a href="/tund3/home.php">Haug</a>
@@ -116,6 +147,7 @@
       <input type="text" name="ideainput" placeholder="m6ttekoht">
       <input type="submit" name="ideasubmit" value="Saada m6te teele!">
     </form>
+    <?php echo $ideahtml;?>
     <hr>
     <?php echo $imghtml;?>
     <footer>
