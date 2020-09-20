@@ -48,10 +48,15 @@
   $picfiles = array_slice($allfiles, 2);
   $imghtml = "";
   $piccount = count($picfiles);
+  $picnumber = rand(0, ($piccount - 1));
 
+  $imghtml .='<img src="vp_pics/' . $picfiles[$picnumber] . '" alt="Tallinna Ylikool">';
+
+  /* 
   for ($i = 0; $i < $piccount; $i++) {
     $imghtml .= '<img src="vp_pics/' . $picfiles[$i] . '" alt="Tallinna Ylikool">';
   }
+  */
   
 
   $haugiPildiArray = array(
@@ -108,7 +113,6 @@
 
   require("header.php");
   ?> 
-
   <div id="contentLocker">
     <header>
       <h1 id="mainHeader">Gheto Kalawiki</h1>
@@ -119,7 +123,8 @@
     </header>
     <nav id="navBar">
       <a href="/tund3/home.php">Haug</a>
-      <a href="/forell.html">Forell</a>
+      <a href="m6tetesisend.php">M6tete sisend</a>
+      <a href="m6tted.php">M6tted</a>
     </nav>
     <div id="content">
       <h2>Haugi poiss</h2>
@@ -154,7 +159,6 @@
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>
       <h4><?php echo "Parajasti on " .$partofday ."." ?></h4>
     </footer>
-  </div>
-
+ </div>
 </body>
 </html>
