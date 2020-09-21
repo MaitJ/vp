@@ -8,31 +8,28 @@
   $database = "if20_mait_ju_1";
  
   require("../../../config.php");
-  if (isset($_POST["ideasubmit"]) and !empty($_POST["ideainput"])) {
-	//Loome andmebaasiga yhenduse
-	$conn = new mysqli($serverhost, $serverusername, $serverpassword, $database);	
-	//Valmistan ette sql k2su andmete kirjutamiseks
-	$stmt = $conn->prepare("INSERT INTO myideas (idea) VALUES (?)");
-	echo $conn->error;
-
-	//i - integer, d -decimal, s -string
-	$stmt->bind_param("s", $_POST["ideainput"]);
-	$stmt->execute();
-	$stmt->close();
-	$conn->close();
-  }
+  //Loen andmebaasist filme
  
-  //Loen andmebaasist senised m6tted
 
-  $ideahtml = "";
+  $filmhtml = "";
   $conn = new mysqli($serverhost, $serverusername, $serverpassword, $database);	
-  $stmt = $conn->prepare("SELECT idea FROM myideas");
-  //Seon tulemuse muutujaga
-  $stmt->bind_result($ideafromdb);
+  //$stmt = $conn->prepare("SELECT pealkiri, aasta, kestus, zanr, tootja, lavastaja FROM film");
+
+  $stmt = $conn->prepare("SELECT * FROM film");
+  $stmt->bind_result($titlefromdb, $yearfromdb, $durationfromdb, $genrefromdb, $studiofromdb, $directorfromdb);
   $stmt->execute();
+  $filmhtml = "<ol> \n";
   while ($stmt->fetch()) {
-	$ideahtml .= "<p>" . $ideafromdb . "</p>";
+	$filmhtml .= "\t\t<li>" . $titlefromdb . "\n";
+	$filmhtml .= "\t\t\t<ul> \n";
+	$filmhtml .= "\t\t\t\t<li>" . $yearfromdb . "</li> \n";
+	$filmhtml .= "\t\t\t\t<li>" . $genrefromdb. "</li> \n";
+	$filmhtml .= "\t\t\t\t<li>" . $studiofromdb. "</li> \n";
+	$filmhtml .= "\t\t\t\t<li>" . $directorfromdb. "</li> \n";
+	$filmhtml .= "\t\t\t</ul> \n";
+	$filmhtml .= "\t\t</li> \n";
   }
+  $filmhtml .= "\t </ol> \n";
   $stmt->close();
   $conn->close();
 
@@ -78,20 +75,6 @@
       $semestriMessage =  "Semester on l6ppenud";
   }
   
-
-  // selgitage välja nende vahe ehk erinevus
-  // $semesterDuration = $semesterStart->diff($semesterEnd);
-
-  // leiame selle p2evade arvu
-  // $semesterDurationDays = $semesterDuration->format("%r%a");
-
-  
-  // if ($fromsemesterstartdays < 0) { semester ple alanud }
-  // if ($semesterstartdays >= $semesterDurationDays)
-  // mitu % õppetööst on tehtud
-
-
-
  require("header.php");
  ?>
 
@@ -110,11 +93,7 @@
       <a href="listfilms.php">Filmide nimekiri</a>
     </nav>
     <div id="content">
-	<form method="POST">
-	<label>Kirjutage siia oma esimene m6te!</label>
-	<input type="text" name="ideainput" placeholder="m6ttekoht">
-	<input type="submit" name="ideasubmit" value="Saada m6te teele!">
-	</form>
+	<?php echo $filmhtml;?>
     </div>
     <footer>
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>

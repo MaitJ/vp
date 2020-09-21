@@ -122,9 +122,10 @@
       <img src="img/vp_banner.png" alt="Veebiprogrammeerimise logo">
     </header>
     <nav id="navBar">
-      <a href="/tund3/home.php">Haug</a>
+      <a href="/tund3/home.php">Avaleht</a>
       <a href="m6tetesisend.php">M6tete sisend</a>
       <a href="m6tted.php">M6tted</a>
+      <a href="listfilms.php">Filmide nimekiri</a>
     </nav>
     <div id="content">
       <h2>Haugi poiss</h2>
@@ -147,13 +148,6 @@
         
         Harrastuspüügil kasutatakse enamasti spinningut ja elussöödaõnge, vähemal määral lendõnge ja põhjaõnge. Enamikus veekogudes on edukaim püügiviis elussöödaõng, mõnes spinning.</p>
     </div>
-    <form method="POST">
-      <label>Kirjutage siia oma esimene m6te!</label>
-      <input type="text" name="ideainput" placeholder="m6ttekoht">
-      <input type="submit" name="ideasubmit" value="Saada m6te teele!">
-    </form>
-    <?php echo $ideahtml;?>
-    <hr>
     <?php echo $imghtml;?>
     <footer>
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>

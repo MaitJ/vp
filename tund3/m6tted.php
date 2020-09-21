@@ -59,6 +59,14 @@
   $daysToSemesterEnd = $toSemesterEnd->format("%r%a");
 
 
+  if ($hourNow < 7) {
+    $partofday = "uneaeg";
+  }
+
+  if ($hourNow >= 8 && $hourNow < 18) {
+    $partofday = "akadeemilise aktiivsuse aeg";
+  }
+
   $semestriMessage = 0;
 
   if ($semesterStartDays < 0) {
@@ -96,9 +104,10 @@
       <img src="img/vp_banner.png" alt="Veebiprogrammeerimise logo">
     </header>
     <nav id="navBar">
-      <a href="home.php">Haug</a>
+      <a href="home.php">Avaleht</a>
       <a href="m6tetesisend.php">M6tete sisend</a>
       <a href="m6tted.php">M6tted</a>
+      <a href="listfilms.php">Filmide nimekiri</a>
     </nav>
     <div id="content">
     </div>
