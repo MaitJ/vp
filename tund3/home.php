@@ -4,7 +4,7 @@
   $hourNow = date("H");
   $partofday = "lihtsalt aeg";
 
-  $database = "if20_mait_ju_1";
+  require("fnc_film.php");
  
   require("../../../config.php");
   if (isset($_POST["ideasubmit"]) and !empty($_POST["ideainput"])) {
@@ -126,6 +126,7 @@
       <a href="m6tetesisend.php">M6tete sisend</a>
       <a href="m6tted.php">M6tted</a>
       <a href="listfilms.php">Filmide nimekiri</a>
+      <a href="addfilms.php">Filmide lisamine</a>
     </nav>
     <div id="content">
       <h2>Haugi poiss</h2>

@@ -6,6 +6,28 @@
   $partofday = "lihtsalt aeg";
   require("../../../config.php");
   require("fnc_film.php");
+  
+  $inputerror = "";
+  $filmhtml = "";
+  //Kas vajutati submit nuppu
+  if (isset($_POST["filmsubmit"])) {
+	if (empty($_POST["titleinput"]) or empty($_POST["genreinput"]) or empty($_POST["studioinput"]) or empty($_POST["directorinput"])){
+	$inputerror .= "Osa infost on sisestamata!";
+   } 	
+  if ($_POST["yearinput"] < 1895 or $_POST["yearinput"] > date("Y")){
+	$inputerror .= "Ebareaalne valmimisaasta";
+   }
+   if (empty($inputerror)) {
+	$storeinfo = storefilminfo($_POST["titleinput"], $_POST["yearinput"], $_POST["durationinput"], $_POST["genreinput"], $_POST["studioinput"], $_POST["directorinput"]);
+	
+   if ($storeinfo == 1) {
+	$filmhtml = readfilms(1);
+    } else {
+	$filmhtml = "<p>Kahjuks filmi info salvestamine seekord eba6nnestus</p>";
+    }
+   }
+  } 
+
 
 
   $weekdayNamesET = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"];
@@ -68,8 +90,24 @@
       <a href="addfilms.php">Filmide lisamine</a>
     </nav>
     <div id="content">
-	<?php echo readfilms(0);?>
+	<form method="POST" id="filmiform">
+		<label for="titleinput">Filmi pealkiri</label>
+		<input type="text" name="titleinput" id="titleinput" placeholder="Pealkiri"> 
+		<label for="yearinput">Filmi aasta</label>
+		<input type="number" name="yearinput" id="yearinput" value="<?php echo date("Y")?>"> 
+		<label for="durationinput">Filmi kestus</label>
+		<input type="number" name="durationinput" id="durationinput" value="90"> 
+		<label for="genreinput">Filmi zanr</label>
+		<input type="text" name="genreinput" id="genreinput" placeholder="Filmi zanr"> 
+		<label for="studioinput">Filmi tootja</label>
+		<input type="text" name="studioinput" id="studioinput" placeholder="Filmi tootja"> 
+		<label for="direcotrinput">Filmi lavastaja</label>
+		<input type="text" name="directorinput" id="directorinput" placeholder="Filmi lavastaja"> 
+		<br>
+		<input type="submit" name="filmsubmit" value="Salvesta filmi info">
+	</form>
     </div>
+    <?php echo $inputerror;?>
     <footer>
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>
       <h4><?php echo "Parajasti on " .$partofday ."." ?></h4>

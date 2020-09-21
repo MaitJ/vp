@@ -39,3 +39,7 @@ footer {
 header img {
     width: auto;
 }
+
+#filmiform {
+    display: inline-grid;
+}
