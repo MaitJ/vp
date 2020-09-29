@@ -43,3 +43,9 @@ header img {
 #filmiform {
     display: inline-grid;
 }
+
+#registerform {
+    display: flex;
+    flex-direction: column;
+
+}
