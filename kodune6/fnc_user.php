@@ -65,20 +65,17 @@ function signin($email, $password) {
                     if($stmt->fetch()) {
                         $_SESSION["userbgcolor"] = $bgcolorfromdb;
                         $_SESSION["usertxtcolor"] = $txtcolorfromdb;
-                        $stmt->close();
-                        $conn->close();
 
                     }
                     else {
                         $_SESSION["userbgcolor"] = "#CCCCCC";
                         $_SESSION["usertxtcolor"] = "#000066"; 
-                        $stmt->close();
-                        $conn->close();
                     }
                 }
 
-
+                $stmt->close();
                 $conn->close();
+
                 header("Location: home.php");
                 exit();
             }
