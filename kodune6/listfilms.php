@@ -1,4 +1,5 @@
 <?php
+  require("usersession.php");
  
   $username = "Mait Jurask";
   $fullTimeNow = date("H:i:s");
@@ -55,6 +56,7 @@
   <div id="contentLocker">
     <header>
       <h1 id="mainHeader">Gheto Kalawiki</h1>
+      <h3 id="mainHeader">Tere tulemast <?php echo $_SESSION["userfirstname"] . " " . $_SESSION["userlastname"] ?></h3>
       <h3 id="mainHeader">See leht on veebiprogemise kursuse alusel tehtud, midagi t2htsat siin ei ole</h3>
       <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $weekdayNamesET[$weekdaynow - 1]. " " . date("j") . ". " . $monthNamesET[$monthnow - 1] . " " . $fullTimeNow?></h3>
       <h4 id="mainHeader"><?php echo $semestriMessage?></h3>

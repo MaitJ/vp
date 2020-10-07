@@ -4,5 +4,6 @@
 <a href="m6tted.php">M6tted</a>
 <a href="listfilms.php">Filmide nimekiri</a>
 <a href="addfilms.php">Filmide lisamine</a>
-<a href="register.php">Registreerimine</a>
+<a href="?logout=1">Logi v2lja</a>
+<a href="userprofile.php">Minu kasutajaprofiil</a>
 </nav>

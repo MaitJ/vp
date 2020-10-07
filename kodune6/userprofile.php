@@ -1,51 +1,34 @@
-<?php 
-  session_start();
-  $username = "";
+<?php
+  require("usersession.php");
+ 
+  $username = "Mait Jurask";
   $fullTimeNow = date("H:i:s");
   $hourNow = date("H");
   $partofday = "lihtsalt aeg";
 
-  require("fnc_film.php");
+  $database = "if20_mait_ju_1";
+  require("fnc_common.php");
+  require("fnc_user.php");
  
   require("../../../config.php");
-  require("fnc_user.php");
-  $emailinput = "";
-  $passwordinput = "";
+  $notice = ""; 
+  $userdescription = readuserdescription();
+  if (isset($_POST["profilesubmit"])) {
+   $description = test_input($_POST["descriptioninput"]);
+   $result = storeuserprofile($description, $_POST["bgcolorinput"], $_POST["txtcolorinput"]); 
+   //Sealt peaks tulema kas ok v6i mingi error!
 
-  $emailinputerror = "";
-  $passwordinputerror = "";
-
-  $result = "";
-  if (isset($_POST["signinsubmit"]) and !empty($_POST["signinsubmit"])){
-    if (empty($_POST["emailinput"])) {
-      $emailinputerror = "Emaili pole sisestatud";
-    }
-    else {
-      $emailinput = $_POST["emailinput"];
-    }
-
-    if (empty($_POST["passwordinput"])) {
-      $passwordinputerror = "Parooli pole sisestatud";
-    }
-    else if (strlen($_POST["passwordinput"]) < 8) {
-      $passwordinputerror = "Parool on lühem kui 8 tähemärki";
-    }
-
-    $emailinput = filter_var($_POST["emailinput"], FILTER_SANITIZE_STRING);
-    if (filter_var($_POST["emailinput"], FILTER_VALIDATE_EMAIL) === false) {
-      $emailinputerror = "Email ei ole korrektses formaadis";
-    }
-    else {
-      $emailinput = filter_var($_POST["emailinput"], FILTER_VALIDATE_EMAIL);
-    }
-
-    if (empty($emailinputerror) and empty($passwordinputerror)) {
-      
-      $result = signin($emailinput, $_POST["passwordinput"]);
-
-    }
+   if ($result == "ok") {
+     $notice = "Kasutaja profiil on salvestatud";
+     $userdescription = $description;
+     $_SESSION["userbgcolor"] = $_POST["bgcolorinput"];
+     $_SESSION["usertxtcolor"] = $_POST["txtcolorinput"];
+   }
+   else {
+     $notice = "Profiili salvestamine eba6nnestus";
+   }
   }
-
+ 
 
   $weekdayNamesET = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"];
   $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
@@ -53,36 +36,6 @@
   $weekdaynow = date("N");
   $monthnow = date("n");
 
-  //loeme kataloogist piltide nimekirja
-  $allfiles = scandir("vp_pics/");
-  //var_dump($allfiles);
-  $picfiles = array_slice($allfiles, 2);
-  $imghtml = "";
-  $piccount = count($picfiles);
-  $picnumber = rand(0, ($piccount - 1));
-
-  $imghtml .='<img src="vp_pics/' . $picfiles[$picnumber] . '" alt="Tallinna Ylikool">';
-
-  /* 
-  for ($i = 0; $i < $piccount; $i++) {
-    $imghtml .= '<img src="vp_pics/' . $picfiles[$i] . '" alt="Tallinna Ylikool">';
-  }
-  */
-  
-
-  $haugiPildiArray = array(
-    0 => "../pics/haug.jpeg",
-    1 => "../pics/haug2.jpg"
-  );
-
-
-  if ($hourNow < 7) {
-    $partofday = "uneaeg";
-  }
-
-  if ($hourNow >= 8 && $hourNow < 18) {
-    $partofday = "akadeemilise aktiivsuse aeg";
-  }
 
   //vaatame semestri kulgemist
   $semesterStart = new DateTime("2020-08-31");
@@ -98,6 +51,14 @@
   $semesterDurationDays = $semesterDuration->format("%r%a");
   $daysToSemesterEnd = $toSemesterEnd->format("%r%a");
 
+
+  if ($hourNow < 7) {
+    $partofday = "uneaeg";
+  }
+
+  if ($hourNow >= 8 && $hourNow < 18) {
+    $partofday = "akadeemilise aktiivsuse aeg";
+  }
 
   $semestriMessage = 0;
 
@@ -122,28 +83,39 @@
   // if ($semesterstartdays >= $semesterDurationDays)
   // mitu % õppetööst on tehtud
 
-  require("header.php");
-  ?> 
+
+
+ require("header.php");
+ ?>
+
   <div id="contentLocker">
     <header>
       <h1 id="mainHeader">Gheto Kalawiki</h1>
+      
+      <h3 id="mainHeader">Tere tulemast <?php echo $_SESSION["userfirstname"] . " " . $_SESSION["userlastname"] ?></h3>
+
       <h3 id="mainHeader">See leht on veebiprogemise kursuse alusel tehtud, midagi t2htsat siin ei ole</h3>
       <h3 id="mainHeader">Lehe avamisel oli hetkel kell: <?php echo $weekdayNamesET[$weekdaynow - 1]. " " . date("j") . ". " . $monthNamesET[$monthnow - 1] . " " . $fullTimeNow?></h3>
       <h4 id="mainHeader"><?php echo $semestriMessage?></h3>
       <img src="img/vp_banner.png" alt="Veebiprogrammeerimise logo">
     </header>
-    <?php require('defnavbar.php'); ?>
+    <?php require('navbar.php'); ?>
     <div id="content">
-    <form method="POST" id="registerform">
-      <label for="emailinput">Email: </label>
-      <input type="email" id="emailinput" name="emailinput" placeholder="Sinu email" value="<?php echo $emailinput?>">
-      <span><?php echo $emailinputerror; ?></span>
-      <label for="passwordinput">Parool: </label>
-      <input type="password" id="passwordinput" name="passwordinput" placeholder="Sinu parool">
-      <span><?php echo $passwordinputerror; ?></span>
-      <input type="submit" name="signinsubmit" value="Logi sisse">
-      <span><?php echo $result; ?></span>
-    </form>
+	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+  <label for="descriptioninput">Minu lyhitutvustus:</label>
+  <br>
+  <textarea name="descriptioninput" id="descriptioninput" rows="10" cols="80" placeholder="Minu tutvustus..."><?php echo $userdescription; ?></textarea>
+  <br>
+  <label for="bgcolorinput">Minu valitud taustav2rv: </label>
+  <input type="color" name="bgcolorinput" id="bgcolorinput" value="<?php echo $_SESSION["userbgcolor"]?>">
+  <br>
+  <label for="txtcolorinput">Minu valitud tekstiv2rv </label>
+  <input type="color" name="txtcolorinput" id="txtcolorinput" value="<?php echo$_SESSION["usertxtcolor"]?>">
+  <br>
+  <input type="submit" name="profilesubmit" value="Salvesta profiil">
+  <span><?php echo $notice;?></span>
+
+	</form>
     </div>
     <footer>
       <h4>See veebileht on tehtud Mait Jurask'i poolt.</h4>
